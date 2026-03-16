@@ -1,52 +1,57 @@
-#wpim-map{
-    max-width:1200px;
-    margin:auto;
-    margin-bottom:60px;
+#wpim-map {
+    max-width: 1200px;
+    margin: auto;
+    margin-bottom: 60px;
 }
 
-.wpim-project-grid{
-
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
-    gap:40px;
-
+#wpim-map svg,
+.elementor-element svg {
+    width: 100% !important;
 }
 
-.wpim-project-card{
+.wpim-project-grid {
 
-    background:white;
-    border-radius:4px;
-    overflow:hidden;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    transition:0.3s;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 40px;
 
 }
 
-.wpim-project-card:hover{
+.wpim-project-card {
 
-    transform:translateY(-5px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
-
-}
-
-.wpim-image{
-
-    height:220px;
-    background-size:cover;
-    background-position:center;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
 
 }
 
-.wpim-content{
+.wpim-project-card:hover {
 
-    padding:25px;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 
 }
 
-.wpim-content h3{
+.wpim-image {
 
-    font-size:20px;
-    margin-bottom:15px;
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+
+}
+
+.wpim-content {
+
+    padding: 25px;
+
+}
+
+.wpim-content h3 {
+
+    font-size: 20px;
+    margin-bottom: 15px;
 
 }
 
@@ -58,59 +63,59 @@
 }
 
 
-#wpim-map path:hover{
-    opacity:0.8;
-    cursor:pointer;
+#wpim-map path:hover {
+    opacity: 0.8;
+    cursor: pointer;
 }
 
 
-.wpim-content p{
+.wpim-content p {
 
-    color:#666;
-    font-size:14px;
-    line-height:1.6;
-
-}
-
-.wpim-more{
-
-    color:#ff6600;
-    font-weight:bold;
-    font-size:13px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
 
 }
 
-.wpim-date{
+.wpim-more {
 
-    border-top:1px solid #eee;
-    padding:15px 25px;
-    font-size:13px;
-    color:#999;
+    color: #ff6600;
+    font-weight: bold;
+    font-size: 13px;
+
+}
+
+.wpim-date {
+
+    border-top: 1px solid #eee;
+    padding: 15px 25px;
+    font-size: 13px;
+    color: #999;
 
 }
 
 
-.wpim-pagination{
+.wpim-pagination {
 
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    margin-top:40px;
-
-}
-
-.wpim-page{
-
-    padding:8px 14px;
-    border:1px solid #ddd;
-    cursor:pointer;
-    background:white;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
 
 }
 
-.wpim-page:hover{
+.wpim-page {
 
-    background:#ff6600;
-    color:white;
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    background: white;
+
+}
+
+.wpim-page:hover {
+
+    background: #ff6600;
+    color: white;
 
 }

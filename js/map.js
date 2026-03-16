@@ -13,7 +13,12 @@ function loadProjects(page = 1) {
 
     let countries = [];
 
+    console.log("Selected country");
+    console.log(selectedCountry);
+
     if (selectedCountry) {
+        //open new tab
+        window.open("https://dropstone.ch/country/" + selectedCountry, "_blank");
         countries.push(selectedCountry);
     }
 

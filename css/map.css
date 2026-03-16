@@ -4,8 +4,7 @@
     margin-bottom: 60px;
 }
 
-#wpim-map svg,
-.elementor-element svg {
+#wpim-map svg {
     width: 100% !important;
 }
 

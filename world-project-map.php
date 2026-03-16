@@ -2,7 +2,7 @@
 /*
 Plugin Name: World Projects Interactive Map
 Description: Interactive map filtering posts by country taxonomy
-Version: 1.3
+Version: 1.4
 Author: Octave Benil
 */
 

@@ -70,6 +70,10 @@ function wpim_shortcode()
     ?>
 
     <div id="wpim-map"></div>
+    <div id="wpim-tooltip"></div>
+    <div id="wpim-country">
+        <h2 id="wpim-country-name"></h2>
+    </div>
     <div id="wpim-projects"></div>
 
     <?php

@@ -145,3 +145,41 @@
     color: white;
 
 }
+
+
+#wpim-map {
+    display: flex;
+    justify-content: center;
+}
+
+#wpim-tooltip {
+    position: fixed;
+    display: none;
+    background: #000;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#wpim-map {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+@media (min-width: 811px) {
+    #wpim-map svg {
+        height: 70vh;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 810px) {
+    #wpim-map svg {
+        height: 320px;
+    }
+}

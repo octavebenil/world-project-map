@@ -1,6 +1,7 @@
 let selectedCountry = null;
 let selectedElement = null;
 let currentPage = 1;
+let isPinned = false;
 
 
 /* ---------------------------
@@ -23,11 +24,11 @@ function loadProjects(page = 1) {
         page: currentPage
     }, function (data) {
 
-        console.log("DOnnnnéee")
-        console.log(selectedCountry)
-        console.log(data)
         document.getElementById("wpim-projects").innerHTML = data;
-        document.getElementById("wpim-country-name").innerHTML = selectedCountry;
+
+        if (document.getElementById("wpim-country-name")) {
+            document.getElementById("wpim-country-name").innerHTML = selectedCountry ?? "Tous les pays";
+        }
 
     });
 
@@ -53,10 +54,8 @@ PAGINATION
 document.addEventListener("click", function (e) {
 
     if (e.target.classList.contains("wpim-page")) {
-
         let page = parseInt(e.target.dataset.page);
         loadProjects(page);
-
     }
 
 });
@@ -78,9 +77,13 @@ function initMap() {
 
     const isMobile = window.innerWidth < 810;
 
+    /* ---------------------------
+    PROJECTION (centrage propre)
+    --------------------------- */
+
     const projection = d3.geoMercator()
-        .scale(isMobile ? 220 : 150)
-        .center(isMobile ? [15, 10] : [0, 20])
+        .scale(isMobile ? 260 : 150)
+        .center(isMobile ? [15, 20] : [0, 20])
         .translate([width / 2, height / 2]);
 
     const path = d3.geoPath().projection(projection);
@@ -88,15 +91,57 @@ function initMap() {
 
     const tooltip = d3.select("#wpim-tooltip");
 
-    /* zoom */
+    /* ---------------------------
+    ZOOM
+    --------------------------- */
 
-    svg.call(
-        d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
+    const zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", (event) => {
             g.attr("transform", event.transform);
-        })
-    );
+        });
 
-    /* load world map */
+    svg.call(zoom);
+
+    /* ---------------------------
+    ZOOM INITIAL MOBILE
+    --------------------------- */
+
+    if (isMobile) {
+
+        const initialTransform = d3.zoomIdentity
+            .translate(width * 0.15, height * 0.05)
+            .scale(1.8);
+
+        svg.call(zoom.transform, initialTransform);
+    }
+
+    /* ---------------------------
+    RESET CLICK (fond)
+    --------------------------- */
+
+    svg.on("click", function (event) {
+
+        if (event.target.tagName === "svg") {
+
+            isPinned = false;
+            tooltip.style("display", "none");
+
+            if (selectedElement) {
+                selectedElement.attr("fill", "#2c7be5");
+            }
+
+            selectedCountry = null;
+            selectedElement = null;
+
+            loadProjects(1);
+        }
+
+    });
+
+    /* ---------------------------
+    LOAD MAP
+    --------------------------- */
 
     fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
         .then(res => res.json())
@@ -111,7 +156,7 @@ function initMap() {
                 .attr("d", path)
                 .attr("stroke", "#999")
 
-                /* colors */
+                /* COLORS */
 
                 .attr("fill", function (d) {
 
@@ -121,15 +166,16 @@ function initMap() {
                     );
 
                     return match ? "#2c7be5" : "#e0e0e0";
-
                 })
 
 
                 /* ---------------------------
-                TOOLTIP
+                HOVER
                 --------------------------- */
 
                 .on("mouseover", function (event, d) {
+
+                    if (isPinned) return;
 
                     let match = WPIM.countries.find(c =>
                         d.properties.name &&
@@ -138,24 +184,31 @@ function initMap() {
 
                     if (!match) return;
 
+
+                    const [x, y] = path.centroid(d);
+                    const svgRect = document.querySelector("#wpim-map svg").getBoundingClientRect();
+
                     tooltip
                         .style("display", "block")
-                        .html("<strong>" + match.name + "</strong><br>" + match.count + " projets");
-
+                        .style("left", (svgRect.left + x + 10) + "px")
+                        .style("top", (svgRect.top + y - 10) + "px")
+                        .html("<strong>" + match.name + "</strong>");
                 })
 
                 .on("mousemove", function (event) {
 
+                    if (isPinned) return;
+
                     tooltip
                         .style("left", (event.pageX + 10) + "px")
                         .style("top", (event.pageY + 10) + "px");
-
                 })
 
                 .on("mouseout", function () {
 
-                    tooltip.style("display", "none");
+                    if (isPinned) return;
 
+                    tooltip.style("display", "none");
                 })
 
 
@@ -172,7 +225,7 @@ function initMap() {
 
                     if (!match) return;
 
-                    /* CTRL + click → open page */
+                    /* CTRL + click */
 
                     if (event.ctrlKey) {
                         window.open("https://dropstone.ch/country/" + match.slug, "_blank");
@@ -185,15 +238,25 @@ function initMap() {
                         selectedElement.attr("fill", "#2c7be5");
                     }
 
-                    /* select new */
-
                     selectedCountry = match.slug;
                     selectedElement = d3.select(this);
 
                     selectedElement.attr("fill", "#ff6600");
 
-                    loadProjects(1);
+                    isPinned = true;
 
+                    /* position tooltip fixe */
+
+                    const [x, y] = path.centroid(d);
+                    const svgRect = document.querySelector("#wpim-map svg").getBoundingClientRect();
+
+                    tooltip
+                        .style("display", "block")
+                        .style("left", (svgRect.left + x + 10) + "px")
+                        .style("top", (svgRect.top + y - 10) + "px")
+                        .html("<strong>" + match.name + "</strong>");
+
+                    loadProjects(1);
                 });
 
         });

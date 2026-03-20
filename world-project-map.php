@@ -43,7 +43,7 @@ function wpim_get_countries()
 
     $terms = get_terms([
         'taxonomy' => 'country',
-        'hide_empty' => true
+        'hide_empty' => false
     ]);
 
     $data = [];

@@ -21,26 +21,26 @@ function wpim_enqueue_assets()
     wp_enqueue_script('jsvectormap-world', "https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js", ['jsvectormap'], null, true);
 
     wp_enqueue_script(
-        'wpim-map',
-        plugin_dir_url(__FILE__) . 'js/map.js',
-        ['jquery', 'jsvectormap', 'jsvectormap-world'],
-        '1.0',
-        true
+            'wpim-map',
+            plugin_dir_url(__FILE__) . 'js/map.js',
+            ['jquery', 'jsvectormap', 'jsvectormap-world'],
+            '1.0',
+            true
     );
 
     wp_enqueue_style(
-        'wpim-style',
-        plugin_dir_url(__FILE__) . 'css/map.css'
+            'wpim-style',
+            plugin_dir_url(__FILE__) . 'css/map.css'
     );
 
     $countries_json = plugin_dir_url(__FILE__) . "countries.json";
 
     wp_localize_script('wpim-map', 'WPIM', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'countries' => wpim_get_countries(),
-        'countries_json' => json_decode($countries_json),
-        'plugin_url' => plugin_dir_url(__FILE__),
-        'home_url' => home_url('/')
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'countries' => wpim_get_countries(),
+            'countries_json' => json_decode($countries_json),
+            'plugin_url' => plugin_dir_url(__FILE__),
+            'home_url' => home_url('/')
     ]);
 
 }
@@ -52,8 +52,8 @@ function wpim_get_countries()
 {
 
     $terms = get_terms([
-        'taxonomy' => 'country',
-        'hide_empty' => false
+            'taxonomy' => 'country',
+            'hide_empty' => true
     ]);
 
     $data = [];
@@ -61,9 +61,9 @@ function wpim_get_countries()
     foreach ($terms as $t) {
 
         $data[] = [
-            'name' => $t->name,
-            'slug' => $t->slug,
-            'count' => $t->count
+                'name' => $t->name,
+                'slug' => $t->slug,
+                'count' => $t->count
         ];
 
     }
@@ -80,7 +80,7 @@ function wpim_shortcode()
     ?>
 
     <div class="max-w-5xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mx-auto">
-        
+
         <div class="p-8 text-center border-b border-gray-100 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="text-left w-full">
                 <h3 class="text-2xl font-bold text-gray-800">Dropstone Intervention Map</h3>
@@ -90,14 +90,14 @@ function wpim_shortcode()
 
         <div class="p-4 bg-white relative">
             <div id="wpim-map" class="rounded-xl overflow-hidden border border-gray-200" style="width: 100%; height: 60vh; min-height: 400px;"></div>
-            
+
             <!-- Global button centered at the bottom -->
-<!--            <div class="mt-6 mb-2 flex justify-center">-->
-<!--                <a href="--><?php //echo esc_url(home_url('/country/global')); ?><!--" target="_blank" -->
-<!--                   class="inline-flex items-center justify-center px-8 py-3 bg-orange-500 text-white font-bold text-lg rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 border-2 border-transparent">-->
-<!--                    🌍 Global Project-->
-<!--                </a>-->
-<!--            </div>-->
+            <!--            <div class="mt-6 mb-2 flex justify-center">-->
+            <!--                <a href="--><?php //echo esc_url(home_url('/country/global')); ?><!--" target="_blank" -->
+            <!--                   class="inline-flex items-center justify-center px-8 py-3 bg-orange-500 text-white font-bold text-lg rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 border-2 border-transparent">-->
+            <!--                    🌍 Global Project-->
+            <!--                </a>-->
+            <!--            </div>-->
         </div>
     </div>
 
@@ -136,19 +136,19 @@ function wpim_filter_projects()
     $paged = isset($_POST['page']) ? intval($_POST['page']) : 1;
 
     $args = [
-        'post_type' => 'post',
-        'posts_per_page' => 6,
-        'paged' => $paged
+            'post_type' => 'post',
+            'posts_per_page' => 6,
+            'paged' => $paged
     ];
 
     if (!empty($countries)) {
 
         $args['tax_query'] = [
-            [
-                'taxonomy' => 'country',
-                'field' => 'slug',
-                'terms' => $countries
-            ]
+                [
+                        'taxonomy' => 'country',
+                        'field' => 'slug',
+                        'terms' => $countries
+                ]
         ];
 
     }

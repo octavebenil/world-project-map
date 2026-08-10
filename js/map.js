@@ -133,12 +133,12 @@ async function initMap() {
     // Create country links dictionary from WordPress countries
     const countryLinks = {};
     const codeToSlug = {}; // Mapping ISO code to WordPress slug
-    
+
     // Load countries.json to get the mapping
     try {
         const response = await fetch(WPIM.plugin_url + "countries.json");
         const countriesJson = await response.json();
-        
+
         // Create reverse mapping from country name to ISO code
         const countryNameToCode = {};
         for (const code in countriesJson) {
@@ -174,7 +174,7 @@ async function initMap() {
             map: "world",
             zoomButtons: true,
             zoomOnScroll: true,
-            
+
             // Configuration des couleurs via series
             series: {
                 regions: [{
@@ -185,7 +185,7 @@ async function initMap() {
                     values: activeCountries
                 }]
             },
-            
+
             // Style par défaut des régions
             regionStyle: {
                 initial: {

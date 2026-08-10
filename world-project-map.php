@@ -2,7 +2,7 @@
 /*
 Plugin Name: World Projects Interactive Map
 Description: Interactive map filtering posts by country taxonomy
-Version: 1.4
+Version: 1.7
 Author: Octave Benil
 */
 
@@ -12,13 +12,18 @@ if (!defined('ABSPATH'))
 function wpim_enqueue_assets()
 {
 
-    wp_enqueue_script('d3', "https://d3js.org/d3.v7.min.js", [], null, true);
-    wp_enqueue_script('topojson', "https://unpkg.com/topojson@3", [], null, true);
+    // Load Tailwind CSS
+    wp_enqueue_script('tailwind', "https://cdn.tailwindcss.com", [], null, false);
+
+    // Load jsVectorMap CSS and JS
+    wp_enqueue_style('jsvectormap', "https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css");
+    wp_enqueue_script('jsvectormap', "https://cdn.jsdelivr.net/npm/jsvectormap", [], null, true);
+    wp_enqueue_script('jsvectormap-world', "https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js", ['jsvectormap'], null, true);
 
     wp_enqueue_script(
         'wpim-map',
         plugin_dir_url(__FILE__) . 'js/map.js',
-        ['jquery'],
+        ['jquery', 'jsvectormap', 'jsvectormap-world'],
         '1.0',
         true
     );
@@ -28,9 +33,14 @@ function wpim_enqueue_assets()
         plugin_dir_url(__FILE__) . 'css/map.css'
     );
 
+    $countries_json = plugin_dir_url(__FILE__) . "countries.json";
+
     wp_localize_script('wpim-map', 'WPIM', [
         'ajax_url' => admin_url('admin-ajax.php'),
-        'countries' => wpim_get_countries()
+        'countries' => wpim_get_countries(),
+        'countries_json' => json_decode($countries_json),
+        'plugin_url' => plugin_dir_url(__FILE__),
+        'home_url' => home_url('/')
     ]);
 
 }
@@ -69,12 +79,46 @@ function wpim_shortcode()
     ob_start();
     ?>
 
-    <div id="wpim-map"></div>
-    <div id="wpim-tooltip"></div>
-    <div id="wpim-country">
-        <h2 id="wpim-country-name"></h2>
+    <div class="max-w-5xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mx-auto">
+        
+        <div class="p-8 text-center border-b border-gray-100 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-left w-full">
+                <h3 class="text-2xl font-bold text-gray-800">Dropstone Intervention Map</h3>
+                <p class="text-sm text-gray-500 mt-3">Click on an orange-colored country to discover our actions.</p>
+            </div>
+        </div>
+
+        <div class="p-4 bg-white relative">
+            <div id="wpim-map" class="rounded-xl overflow-hidden border border-gray-200" style="width: 100%; height: 60vh; min-height: 400px;"></div>
+            
+            <!-- Global button centered at the bottom -->
+<!--            <div class="mt-6 mb-2 flex justify-center">-->
+<!--                <a href="--><?php //echo esc_url(home_url('/country/global')); ?><!--" target="_blank" -->
+<!--                   class="inline-flex items-center justify-center px-8 py-3 bg-orange-500 text-white font-bold text-lg rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 border-2 border-transparent">-->
+<!--                    🌍 Global Project-->
+<!--                </a>-->
+<!--            </div>-->
+        </div>
     </div>
-    <div id="wpim-projects"></div>
+
+
+    <div class="elementor-widget-container" style="display: none;">
+        <select id="country_list" onchange="if(this.value) window.location.href=this.value;">
+            <option value="">Select a Country</option>
+
+            <?php foreach (wpim_get_countries() as $country) { ?>
+                <option value="<?php echo esc_url(home_url('/' . $country['slug'])); ?>"><?php echo esc_html($country['name']); ?></option>
+            <?php } ?>
+
+        </select>
+    </div>
+
+    <div class="wpim-projects">
+        <div id="wpim-country">
+            <h2 id="wpim-country-name">NOS PROJETS</h2>
+        </div>
+        <div id="wpim-projects"></div>
+    </div>
 
     <?php
 

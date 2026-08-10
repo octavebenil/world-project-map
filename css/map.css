@@ -1,38 +1,62 @@
 #wpim-map {
-    max-width: 1200px;
     margin: auto;
     margin-bottom: 60px;
+    width: 100%;
+    height: 60vh;
+    min-height: 400px;
 }
 
-#wpim-map svg {
-    width: 100% !important;
-}
-
-#wpim-tooltip{
-    position:absolute;
-    display:none;
-    background:#000;
-    color:#fff;
-    padding:6px 10px;
-    font-size:13px;
-    border-radius:4px;
-    pointer-events:none;
-    z-index:999;
+/* jsVectorMap tooltip styling */
+.jvm-tooltip {
+    background-color: #1f2937;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 999;
 }
 
 #wpim-country-name{
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     font-size: 20px;
     font-weight: bolder;
     text-align: center;
     text-transform: uppercase;
 }
 
-@media (max-width: 810px) {
-    #wpim-map svg{
-        height: 350px !important;
-    }
+.elementor-widget-container {
+    margin: 20px auto;
+    text-align: center;
+    /*max-width: 400px;*/
+    margin-bottom: 30px;
+}
+
+#country_list {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+#country_list:hover {
+    border-color: #999;
+}
+
+#country_list:focus {
+    outline: none;
+    border-color: #2c7be5;
+}
+
+#wpim-map svg {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .wpim-project-grid {
@@ -144,4 +168,8 @@
     background: #ff6600;
     color: white;
 
+}
+
+.wpim-projects{
+    margin-top: 70px !important;
 }

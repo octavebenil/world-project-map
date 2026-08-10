@@ -173,3 +173,19 @@
 .wpim-projects{
     margin-top: 70px !important;
 }
+
+/* Blinking animation for countries with projects */
+@keyframes blink {
+    0%, 100% {
+        fill: #f97316;
+        opacity: 1;
+    }
+    50% {
+        fill: #fb923c;
+        opacity: 0.7;
+    }
+}
+
+.blinking-country {
+    animation: blink 2s ease-in-out infinite;
+}

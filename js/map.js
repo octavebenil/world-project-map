@@ -2,6 +2,7 @@ let selectedCountry = null;
 let selectedElement = null;
 let currentPage = 1;
 let mapInstance = null;
+let countriesJsonData = null; // Store countries.json data globally
 
 
 /* ---------------------------
@@ -137,12 +138,12 @@ async function initMap() {
     // Load countries.json to get the mapping
     try {
         const response = await fetch(WPIM.plugin_url + "countries.json");
-        const countriesJson = await response.json();
+        countriesJsonData = await response.json();
 
         // Create reverse mapping from country name to ISO code
         const countryNameToCode = {};
-        for (const code in countriesJson) {
-            const countryData = countriesJson[code];
+        for (const code in countriesJsonData) {
+            const countryData = countriesJsonData[code];
             countryNameToCode[countryData.name] = code;
             // Also add French name as alternative
             countryNameToCode[countryData.fr] = code;
@@ -215,17 +216,36 @@ async function initMap() {
                 }
             },
 
-            // Personnalisation de l'infobulle
+            // Personnalisation de l'infobulle - show for all countries
             onRegionTooltipShow: function(event, tooltip, code) {
-                if (!countryLinks[code]) {
-                    // Masque l'infobulle pour les pays sans lien
-                    event.preventDefault();
-                } else {
-                    // Ajoute une indication d'action pour les pays valides
-                    tooltip.text(tooltip.text() + " ↗");
+                if (countriesJsonData && countriesJsonData[code]) {
+                    // Use the name from countries.json
+                    const countryName = countriesJsonData[code].name;
+                    if (countryLinks[code]) {
+                        // Country has projects
+                        tooltip.text(countryName + " (Projects available) ↗");
+                    } else {
+                        // Country has no projects
+                        tooltip.text(countryName);
+                    }
                 }
             }
         });
+        
+        // Add blinking animation to countries with projects
+        setTimeout(() => {
+            const mapContainer = document.querySelector('#wpim-map');
+            if (mapContainer) {
+                const regions = mapContainer.querySelectorAll('[data-code]');
+                regions.forEach(region => {
+                    const code = region.getAttribute('data-code');
+                    if (activeCountries[code]) {
+                        region.classList.add('blinking-country');
+                    }
+                });
+            }
+        }, 500);
+        
     } catch (error) {
         console.error("Error initializing jsVectorMap:", error);
     }
